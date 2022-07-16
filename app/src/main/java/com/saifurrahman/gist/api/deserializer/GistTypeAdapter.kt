@@ -1,5 +1,6 @@
 package com.saifurrahman.gist.api.deserializer
 
+import android.util.Log
 import com.saifurrahman.gist.model.Gist
 import com.squareup.moshi.*
 import java.lang.reflect.Type
@@ -10,7 +11,7 @@ class GistTypeAdapter(private val delegate: JsonAdapter<Gist>) : JsonAdapter<Gis
             type: Type,
             annotations: MutableSet<out Annotation>,
             moshi: Moshi
-        ): JsonAdapter<Gist>? {
+        ): JsonAdapter<*>? {
             if (Types.getRawType(type) == Gist::class.java) {
                 val delegate = moshi.nextAdapter<Gist>(this, type, annotations)
                 return GistTypeAdapter(delegate)
@@ -38,7 +39,22 @@ class GistTypeAdapter(private val delegate: JsonAdapter<Gist>) : JsonAdapter<Gis
                 "files" -> {
                     if (reader.peek() == JsonReader.Token.BEGIN_OBJECT) {
                         reader.beginObject()
-                        filename = reader.nextName()
+                        while (reader.hasNext()) {
+                            if (filename.isNotEmpty()) {
+                                reader.skipValue()
+                                continue
+                            }
+
+                            if (reader.peek() == JsonReader.Token.NAME) {
+                                filename = reader.nextName()
+                                if (filename.isNotEmpty()) {
+                                    reader.skipValue()
+                                }
+                            } else {
+                                reader.skipValue()
+                            }
+                        }
+
                         reader.endObject()
                     } else {
                         reader.skipValue()
@@ -65,10 +81,6 @@ class GistTypeAdapter(private val delegate: JsonAdapter<Gist>) : JsonAdapter<Gis
             }
         }
         reader.endObject()
-
-        if (id.isEmpty() || url.isEmpty() || filename.isEmpty() || username.isEmpty()) {
-            return null
-        }
 
         return Gist(id, url, filename, username)
     }
