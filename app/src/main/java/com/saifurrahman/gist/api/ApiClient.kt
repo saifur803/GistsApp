@@ -11,7 +11,6 @@ import com.squareup.moshi.Moshi
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
-import java.lang.Exception
 import java.util.concurrent.TimeUnit
 
 class ApiClient {

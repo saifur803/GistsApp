@@ -1,6 +1,5 @@
 package com.saifurrahman.gist.db.model
 
-import androidx.room.Dao
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 

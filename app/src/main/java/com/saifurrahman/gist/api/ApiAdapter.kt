@@ -5,10 +5,13 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 
-class ApiAdapter() {
+class ApiAdapter {
     private val apiClient = ApiClient.getInstance()
 
+    private val mutex = Mutex()
     private val parentJob = Job()
     private val coroutineScope = CoroutineScope(Dispatchers.Main + parentJob)
 
@@ -43,8 +46,10 @@ class ApiAdapter() {
         }
 
         coroutineScope.launch(Dispatchers.IO) {
-            val response = apiClient.callGetGistByUser(username)
-            afterCall(response)
+            mutex.withLock {
+                val response = apiClient.callGetGistByUser(username)
+                afterCall(response)
+            }
         }
     }
 }

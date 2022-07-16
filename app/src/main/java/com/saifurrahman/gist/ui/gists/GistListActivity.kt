@@ -1,11 +1,9 @@
 package com.saifurrahman.gist.ui.gists
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.saifurrahman.gist.api.ApiAdapter
 import com.saifurrahman.gist.api.OnGistListDataCallback
@@ -27,7 +25,7 @@ class GistListActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         apiAdapter = ApiAdapter()
-        dataAdapter = DatabaseAdapter(this)
+        dataAdapter = DatabaseAdapter()
 
         initView()
     }
