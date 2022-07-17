@@ -67,6 +67,7 @@ class ApiAdapter {
                 if (response.error == null) {
                     val gistDao = database.gistDao()
                     gist.gistCount = gistList.size
+                    gist.gistByUserIsLoading = true
                     gistDao.updateGist(gist)
                 }
 

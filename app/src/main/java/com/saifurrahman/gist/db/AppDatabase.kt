@@ -15,7 +15,7 @@ import com.saifurrahman.gist.model.Gist
         FavouriteGist::class,
         Gist::class
     ],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

@@ -27,6 +27,5 @@ data class Gist(
 
     var gistCount: Int = 0
 
-    @Ignore
     var gistByUserIsLoading = true
 }
