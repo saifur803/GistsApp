@@ -6,13 +6,16 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.saifurrahman.gist.db.dao.FavoriteGistDao
+import com.saifurrahman.gist.db.dao.GistDao
 import com.saifurrahman.gist.db.model.FavouriteGist
+import com.saifurrahman.gist.model.Gist
 
 @Database(
     entities = [
-        FavouriteGist::class
+        FavouriteGist::class,
+        Gist::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -43,4 +46,6 @@ abstract class AppDatabase : RoomDatabase() {
     }
 
     abstract fun favoriteGistDao(): FavoriteGistDao
+
+    abstract fun gistDao(): GistDao
 }

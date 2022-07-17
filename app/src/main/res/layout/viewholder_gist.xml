@@ -21,42 +21,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
 
-    <TextView
-        android:id="@+id/gist_url_tv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:autoLink="web"
-        android:textColor="@color/textColor"
-        app:layout_constraintEnd_toStartOf="@id/gist_favourite_btn"
-        app:layout_constraintTop_toBottomOf="@id/gist_filename_tv"
-        app:layout_constraintStart_toStartOf="parent"/>
-
     <LinearLayout
         android:id="@+id/gist_shared_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/gist_url_tv">
+        app:layout_constraintTop_toBottomOf="@id/gist_filename_tv">
 
         <View
             android:id="@+id/gist_line"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/textColor"
-            android:layout_marginTop="@dimen/margin_small_size" />
+            android:layout_marginTop="@dimen/margin_size" />
 
         <TextView
             android:id="@+id/gist_username_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/textColor"
+            android:textStyle="italic"
             android:layout_marginTop="@dimen/margin_small_size" />
 
         <TextView
             android:id="@+id/gist_count_tv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textStyle="italic"
             android:textColor="@color/textColor" />
 
     </LinearLayout>

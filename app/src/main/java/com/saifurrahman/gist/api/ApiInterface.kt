@@ -2,6 +2,7 @@ package com.saifurrahman.gist.api
 
 import com.saifurrahman.gist.model.Gist
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Path
 
 interface ApiInterface {

@@ -4,4 +4,6 @@
     <string name="url">Url: %s</string>
     <string name="user">User: %s</string>
     <string name="count">No. of Gists: %s</string>
+    <string name="created_at">Created at: %s</string>
+    <string name="updated_at">Updated at: %s</string>
 </resources>

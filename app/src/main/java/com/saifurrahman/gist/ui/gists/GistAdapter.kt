@@ -8,10 +8,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.saifurrahman.gist.R
 import com.saifurrahman.gist.databinding.ViewholderGistBinding
 import com.saifurrahman.gist.model.Gist
+import com.saifurrahman.gist.util.Utils
+import java.util.*
+import kotlin.collections.ArrayList
 
 class GistAdapter(private val context: Context) : RecyclerView.Adapter<GistAdapter.ViewHolder>() {
-    var gistList = ArrayList<Gist>()
+    private var gistList = ArrayList<Gist>()
     var onGistClickListener: OnGistClickListener? = null
+
+    fun setData(gists: List<Gist>) {
+        val sortedList = gists.sortedByDescending { Utils.convertDateToTimestamp(it.createdAt?:"") }
+
+        gistList = ArrayList(sortedList)
+        notifyDataSetChanged()
+    }
 
     fun updateGist(gist: Gist) {
         val pos = gistList.indexOfFirst { it.id == gist.id }
@@ -21,11 +31,6 @@ class GistAdapter(private val context: Context) : RecyclerView.Adapter<GistAdapt
 
         gistList[pos] = gist
         notifyItemChanged(pos)
-    }
-
-    fun clear() {
-        gistList.clear()
-        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -43,7 +48,6 @@ class GistAdapter(private val context: Context) : RecyclerView.Adapter<GistAdapt
         }
 
         holder.binding.gistFilenameTv.text = gist.filename
-        holder.binding.gistUrlTv.text = context.getString(R.string.url, gist.url)
 
         if (gist.gistCount >= 5) {
             holder.binding.gistSharedView.visibility = View.VISIBLE

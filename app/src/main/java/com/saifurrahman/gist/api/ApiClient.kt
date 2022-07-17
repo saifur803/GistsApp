@@ -5,10 +5,12 @@ import com.saifurrahman.gist.api.ApiConstants.CONNECTION_TIMEOUT
 import com.saifurrahman.gist.api.ApiConstants.READ_TIMEOUT
 import com.saifurrahman.gist.api.ApiConstants.WRITE_TIMEOUT
 import com.saifurrahman.gist.api.deserializer.GistTypeAdapter
-import com.saifurrahman.gist.db.AppDatabase
 import com.saifurrahman.gist.model.Gist
 import com.squareup.moshi.Moshi
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
@@ -32,6 +34,7 @@ class ApiClient {
             connectTimeout(CONNECTION_TIMEOUT, TimeUnit.SECONDS)
             readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
             writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+            addInterceptor(AuthenticatorInterceptor())
             build()
         }
 
@@ -56,13 +59,6 @@ class ApiClient {
         try {
             val gistList = apiInterface.getGistList()
             Log.i(TAG, "Gist List Api finished")
-
-            val favouriteGistDao = AppDatabase.getInstance().favoriteGistDao()
-
-            gistList.forEach con@ {
-                val favouriteGist = favouriteGistDao.getFavouriteGist(it.id) ?: return@con
-                it.isFavourite = favouriteGist.isFavourite
-            }
 
             apiResponse.dataList = gistList
             return apiResponse
@@ -94,6 +90,17 @@ class ApiClient {
             return apiResponse
         }
     }
+}
+
+class AuthenticatorInterceptor: Interceptor {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        val newRequest = chain.request().newBuilder()
+            .addHeader("authorization", ApiConstants.accessToken)
+            .build()
+
+        return chain.proceed(newRequest)
+    }
+
 }
 
 class ApiResponse<T>(list: List<T>) {

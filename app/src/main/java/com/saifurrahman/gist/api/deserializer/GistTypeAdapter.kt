@@ -21,11 +21,16 @@ class GistTypeAdapter(private val delegate: JsonAdapter<Gist>) : JsonAdapter<Gis
 
     }
 
-    override fun fromJson(reader: JsonReader): Gist? {
+    override fun fromJson(reader: JsonReader): Gist {
         var id = ""
         var url = ""
         var filename = ""
         var username = ""
+
+        var createdAt: String? = null
+        var updatedAt: String? = null
+        var description: String? = null
+        var userImageUrl: String? = null
 
         reader.beginObject()
         while (reader.hasNext()) {
@@ -35,6 +40,19 @@ class GistTypeAdapter(private val delegate: JsonAdapter<Gist>) : JsonAdapter<Gis
                 }
                 "url" -> {
                     url = reader.nextString()
+                }
+                "created_at" -> {
+                    createdAt = reader.nextString()
+                }
+                "updated_at" -> {
+                    updatedAt = reader.nextString()
+                }
+                "description" -> {
+                    if (reader.peek() == JsonReader.Token.STRING) {
+                        description = reader.nextString()
+                    } else {
+                        reader.skipValue()
+                    }
                 }
                 "files" -> {
                     if (reader.peek() == JsonReader.Token.BEGIN_OBJECT) {
@@ -64,10 +82,16 @@ class GistTypeAdapter(private val delegate: JsonAdapter<Gist>) : JsonAdapter<Gis
                     if (reader.peek() == JsonReader.Token.BEGIN_OBJECT) {
                         reader.beginObject()
                         while (reader.hasNext()) {
-                            if (reader.nextName() == "login") {
-                                username = reader.nextString()
-                            } else {
-                                reader.skipValue()
+                            when (reader.nextName()) {
+                                "login" -> {
+                                    username = reader.nextString()
+                                }
+                                "avatar_url" -> {
+                                    userImageUrl = reader.nextString()
+                                }
+                                else -> {
+                                    reader.skipValue()
+                                }
                             }
                         }
                         reader.endObject()
@@ -81,8 +105,13 @@ class GistTypeAdapter(private val delegate: JsonAdapter<Gist>) : JsonAdapter<Gis
             }
         }
         reader.endObject()
+        val gist = Gist(id, url, filename, username)
+        gist.createdAt = createdAt
+        gist.updatedAt = updatedAt
+        gist.description = description
+        gist.userImageUrl = userImageUrl
 
-        return Gist(id, url, filename, username)
+        return gist
     }
 
     override fun toJson(writer: JsonWriter, value: Gist?) {
